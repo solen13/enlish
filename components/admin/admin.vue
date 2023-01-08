@@ -1,6 +1,17 @@
 <template>
+   <v-card v-if="isUpdate">
 
-   <v-card class="card" >
+     <div v-for="(item,index) in categoriesAll">
+      <v-btn @click="updateDay(item,index)">{{index}}</v-btn>
+
+     </div>
+     <div>
+     <div v-for="(item,index) in accadion">
+       <v-btn @click="updateBtnWoeld(item,index)">{{item.kelime}}</v-btn>
+     </div>
+     </div>
+   </v-card>
+   <v-card v-else class="card" >
       <div >
         <p class="white pa-3 rounded-xl">Admin Ekranı</p>
       </div>
@@ -70,10 +81,10 @@
      </v-card>
   </template>
 
-     <v-btn class="mt-3" @click="send"> gonder</v-btn>
+     <v-btn @click="update" v-if="isSendBtn" class="mt-3"> Güncelle</v-btn>
+     <v-btn v-else class="mt-3" @click="send"> gonder</v-btn>
 
    </v-card>
-
 </template>
 
 <script>
@@ -85,9 +96,13 @@ export default {
       categoriesAll:null,
       categories:null,
 
+      accadion:null,
       anlamnewTag:null,
       cumlenewTag :null,
-
+      isUpdate:true,
+      isSendBtn:false,
+      categoriesUpdate:null,
+      updateId:null,
       world:{
          kelime:null,
          exampleSentences:[],
@@ -115,10 +130,28 @@ export default {
 
      },
 
+    update(){
+      if(this.categories !=null) {
+        let uid=this.$store.state.uid
+        this.$axios.put('https://englishworld-db088-default-rtdb.europe-west1.firebasedatabase.app/categories/'
+          +uid+'/'+ this.categories +'/'+this.updateId+'.json', this.world)
+          .then(res => {
+            alert('Gönderildi')
+            this.world.kelime=null
+            this.world.exampleSentences=[]
+            this.world.meaning=[]
+            this.anlamnewTag=null,
+              this.cumlenewTag=null
+
+          })
+      }
+    },
+
     addTag() {
       let anlamnewTag= this.anlamnewTag
+
       if(anlamnewTag !=null){
-        this.world.exampleSentences.push(anlamnewTag.trim());
+        this.world.exampleSentences.push(anlamnewTag);
         anlamnewTag=null;
       }
 
@@ -131,13 +164,34 @@ export default {
     addCumleTag() {
      let cumlenewTag=this.cumlenewTag
       if (cumlenewTag != null){
-        this.world.meaning.push(cumlenewTag.trim());
+
+        this.world.meaning.push(cumlenewTag);
         cumlenewTag = null;
       }
 
     },
     deleteCumleTag(tag) {
       this.world.meaning.splice(this.world.meaning.indexOf(tag), 1);
+    },
+
+
+    updateDay(item,index){
+     this.accadion=item
+    this.categoriesUpdate=index
+      console.log(item)
+    },
+    updateBtnWoeld(item,index){
+      console.log('kelime',item)
+      this.categories=this.categoriesUpdate
+      this.world.kelime=item.kelime
+      this.cumlenewTag=item.meaning
+        this.anlamnewTag=item.exampleSentences
+
+      this.isUpdate=false
+      this.updateId=index
+      console.log('id',index)
+     this.isSendBtn=true
+
     },
 
 
