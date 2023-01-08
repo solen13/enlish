@@ -6,7 +6,7 @@
    </div>
 
   <div class="container">
-    <v-card    @click="word(index)" width="100" v-for="(item,index) in getData">
+    <v-card class="d-flex justify-center align-center"  @click="word(index)" width="100" height="60" v-for="(item,index) in getData">
       <h4 class="text-center">{{item.kelime}}</h4>
     </v-card>
   </div>
@@ -22,26 +22,27 @@ export default {
   data(){
     return{
       getData:null,
-      route:null
+      route:null,
+      isShow:true,
+      id:null
   }
   },
   mounted() {
-
     this.route=this.$route.params.day
-
     this.$axios.get(`https://englishworld-db088-default-rtdb.europe-west1.firebasedatabase.app/categories/FSEv7HuEIoVF6XXYlUVogEYb8A03/${this.route}.json`)
       .then(res=>{
         this.getData=res.data
         console.log(this.route)
         console.log(this.getData)
-
       })
   },
   methods:{
     word(item){
      this.$router.push('/'+this.route+'/'+item)
-    }
-  }
+
+    },
+
+  },
 }
 </script>
 
@@ -56,6 +57,5 @@ export default {
   flex-wrap: wrap;
   gap: 5px;
   margin-top: 10px;
-
 }
 </style>

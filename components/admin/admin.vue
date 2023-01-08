@@ -1,63 +1,79 @@
 <template>
- <div>
 
    <v-card class="card" >
-
-     <div v-if="isCategories" style="width: 50%" class="d-flex">
-       <input style="width:100% " class="tag-input"  type="text" placeholder="Categories" v-model="categories">
-       <v-btn @click="isCategories=false">mevcut</v-btn>
-     </div>
-
-     <div v-else style="width: 50%" class="d-flex">
-       <select v-model="categories" style="width:100% " class="tag-input">
-         <option  v-for="(item,index) in categoriesAll" class="tag-input" :key="index">{{index}}</option>
-       </select>
-       <v-btn  @click="isCategories=true">Yeni</v-btn>
-     </div>
-
-
-
-     <input class="tag-input" type="text" placeholder="kelime" v-model="world.kelime">
-
-
-      <div class='tag-input'>
-        <div v-for='(tag, index) in world.exampleSentences' :key='tag' class='tag-input__tag'>
-          {{ tag }}
-          <span @click='removeTag(index)'>x</span>
-        </div>
-        <input
-          type='text'
-          placeholder="Anlamları"
-          class='tag-input__text'
-          @keydown.enter='addTag'
-
-          @keydown.delete='removeLastTag'
-          v-model="tag"
-        />
-
+      <div >
+        <p class="white pa-3 rounded-xl">Admin Ekranı</p>
       </div>
 
+      <div v-if="isCategories" class="input-content rounded" >
+        <input class="input-text"   type="text" placeholder="Categories" v-model="categories">
+        <v-btn small @click="isCategories=false">mevcut</v-btn>
+      </div>
+
+      <div v-else  class="input-content rounded ">
+       <select v-model="categories"  class="input-text">
+         <option  v-for="(item,index) in categoriesAll" class="input-text" :key="index">{{index}}</option>
+       </select>
+       <v-btn small  @click="isCategories=true">Yeni</v-btn>
+     </div>
 
 
-       <div class='tag-input'>
-         <div v-for='(tag, index) in world.meaning' :key='tag' class='tag-input__tag'>
-           {{ tag }}
-           <span @click='removeExample(index)'>x</span>
-         </div>
-         <input
-           type='text'
-           placeholder="Örnek cümleler"
-           class='tag-input__text'
-           @keydown.enter='addExample'
-           @keydown.188='addExample'
-           @keydown.delete='removeLastExample'
-         />
-       </div>
-     <v-btn @click="send"> gonder</v-btn>
-     <v-btn >Cıkıs</v-btn>
+      <div class="input-content rounded">
+        <input class="input-text" type="text" placeholder="kelime" v-model="world.kelime">
+      </div>
+     <template>
+
+      <div class="input-content rounded">
+       <input class="input-text" v-model="anlamnewTag"   placeholder="Anlamı"/>
+       <v-btn fab x-small @click="addTag">
+         <v-icon>mdi-plus</v-icon>
+       </v-btn>
+     </div>
+
+      <v-card v-if="world.exampleSentences.length >0" class="pa-2 card-content" >
+       <p class="text-center">Anlamı</p>
+       <v-row class="" >
+         <v-col cols="12" v-for="(tag, index) in world.exampleSentences" class=" white--text px-4 py-2 rounded-lg mt-2 mb-2"  :key="index">
+           <v-card style="width:100%; border: 1px solid black"  class=" d-flex pa-1">
+             <v-btn @click="deleteTag(tag)" x-small fab icon class="blue white--text mr-2">
+               <v-icon>mdi-close</v-icon>
+             </v-btn>
+             <template class="">{{tag}}</template>
+           </v-card>
+         </v-col>
+       </v-row>
    </v-card>
 
- </div>
+  </template>
+
+  <template>
+
+     <div class="input-content" >
+       <input  class="input-text"  v-model="cumlenewTag"  placeholder="örnek cümleler"/>
+       <v-btn fab x-small  @click="addCumleTag">
+         <v-icon>mdi-plus</v-icon>
+       </v-btn>
+     </div>
+
+     <v-card flat elevation="0" v-if="world.meaning.length >0"  class="pa-2 card-content " >
+       <p class="text-center">Örnek cümleler</p>
+       <v-row >
+         <v-col cols="12" v-for="(tag, index) in world.meaning" class=" px-4 py-2 rounded-lg mt-2 mb-2"  :key="index">
+           <v-card style="width:100%; border: 1px solid black" class="d-flex pa-2 black--text ">
+             <v-btn @click="deleteCumleTag(tag)" x-small fab icon class="blue white--text mr-2">
+               <v-icon>mdi-close</v-icon>
+             </v-btn>
+             <template>{{tag}}</template>
+           </v-card>
+         </v-col>
+       </v-row>
+     </v-card>
+  </template>
+
+     <v-btn class="mt-3" @click="send"> gonder</v-btn>
+
+   </v-card>
+
 </template>
 
 <script>
@@ -68,11 +84,14 @@ export default {
       isCategories:true,
       categoriesAll:null,
       categories:null,
-      tag:null,
+
+      anlamnewTag:null,
+      cumlenewTag :null,
+
       world:{
-        kelime:null,
-        meaning:[],
-        exampleSentences: []
+         kelime:null,
+         exampleSentences:[],
+         meaning:[],
       },
 
     }
@@ -84,62 +103,43 @@ export default {
        this.$axios.post('https://englishworld-db088-default-rtdb.europe-west1.firebasedatabase.app/categories/'
          +uid+'/'+ this.categories + '.json', this.world)
          .then(res => {
-           console.log(res)
+          alert('Gönderildi')
+             this.world.kelime=null
+             this.world.exampleSentences=[]
+             this.world.meaning=[]
+             this.anlamnewTag=null,
+             this.cumlenewTag=null
+
          })
      }
 
      },
 
-    addTag(event) {
-      event.preventDefault()
-      let val = event.target.value.trim()
-      if (val.length > 0) {
-        if (this.world.exampleSentences.length >= 1) {
-          for (let i = 0; i < this.world.exampleSentences.length; i++) {
-            if (this.world.exampleSentences[i] === val) {
-              return false
-            }
-          }
-        }
-        this.world.exampleSentences.push(val)
-        event.target.value = ''
-        console.log(this.world.exampleSentences)
+    addTag() {
+      let anlamnewTag= this.anlamnewTag
+      if(anlamnewTag !=null){
+        this.world.exampleSentences.push(anlamnewTag.trim());
+        anlamnewTag=null;
       }
+
     },
-    removeTag(index){
-      this.world.exampleSentences.splice(index, 1)
-    },
-    removeLastTag(event) {
-      if (event.target.value.length === 0) {
-        this.removeTag(this.world.exampleSentences.length - 1)
-      }
+    deleteTag(tag) {
+      this.world.exampleSentences.splice(this.world.exampleSentences.indexOf(tag), 1);
     },
 
 
-    addExample(event) {
-      event.preventDefault()
-      let val = event.target.value.trim()
-      if (val.length > 0) {
-        if (this.world.meaning.length >= 1) {
-          for (let i = 0; i < this.world.meaning.length; i++) {
-            if (this.world.meaning[i] === val) {
-              return false
-            }
-          }
-        }
-        this.world.meaning.push(val)
-        event.target.value = ''
-        console.log(this.world.meaning)
+    addCumleTag() {
+     let cumlenewTag=this.cumlenewTag
+      if (cumlenewTag != null){
+        this.world.meaning.push(cumlenewTag.trim());
+        cumlenewTag = null;
       }
+
     },
-    removeExample(index){
-      this.world.meaning.splice(index, 1)
+    deleteCumleTag(tag) {
+      this.world.meaning.splice(this.world.meaning.indexOf(tag), 1);
     },
-    removeLastExample(event) {
-      if (event.target.value.length === 0) {
-        this.removeTag(this.world.meaning.length - 1)
-      }
-    }
+
 
   },
 
@@ -167,48 +167,34 @@ export default {
   background: linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(102,126,234,1) 50%, rgba(69,252,250,1) 100%);
 }
 
-
-
-
-.tag-input {
+.input-content{
   width: 50%;
-  border: 1px solid #D9DFE7;
-  background: #fff;
-  border-radius: 4px;
-  font-size: 0.9em;
-  min-height: 45px;
-  box-sizing: border-box;
-  padding: 0 10px;
-  margin-bottom: 10px;
-}
-
-.tag-input__tag {
-  height: 24px;
-  color: white;
-  float: left;
-  font-size: 14px;
-  margin-right: 10px;
-  background-color: #667EEA;
-  border-radius: 15px;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  align-items: center;
   margin-top: 10px;
-  line-height: 24px;
-  padding: 0 8px;
-
 }
-
-.tag-input__tag > span {
-  cursor: pointer;
-  opacity: 0.75;
-  display: inline-block;
-  margin-left: 8px;
-}
-
-.tag-input__text {
-  border: none;
+.input-text{
+  width: 100%;
+  height: 100%;
+  padding-left: 10px;
   outline: none;
-  font-size: 1em;
-  line-height: 40px;
-  background: none;
+}
+.input-text:focus{
+  border: 2px solid grey;
+}
+.card-content{
+  width: 50%;
+}
+@media only screen and (max-width: 600px) {
+  .input-content{
+    width: 100%;
+  }
+  .card-content{
+    width: 100%;
+  }
 }
 
 </style>
