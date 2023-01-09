@@ -1,9 +1,19 @@
 
 <template>
-  <span>
-    <v-btn @click="startRecognition">basla</v-btn>
-    <p v-model="txtResualt=word" class="blue" v-for="word in transcription"></p>
-    <p class="red">{{ runtimeTranscription }}</p>
+  <span >
+
+    <div class="d-flex justify-center">
+      <v-btn v-if="runtimeTranscription" class="red mb-3" fab >
+        <v-icon color="white">mdi-microphone</v-icon>
+      </v-btn>
+
+      <v-btn v-else fab class="mb-3"  @click="startRecognition">
+        <v-icon>mdi-microphone</v-icon>
+     </v-btn>
+    </div>
+
+    <p  v-model="txtResualt=word"  v-for="word in transcription"></p>
+    <p v-if="runtimeTranscription" class="red pa-2 blue white--text rounded mt-1 text-center">{{ runtimeTranscription }}</p>
 
   </span>
 </template>

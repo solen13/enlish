@@ -1,5 +1,5 @@
 <template>
-  <div v-if="getData">
+  <div class="pa-3" v-if="getData">
 
   <div class="pa-2">
     <h4 class="pa-2 text-center">Kelime</h4>
@@ -32,14 +32,34 @@
     </v-card>
 
     <v-card>
-      <p>Kendini test et</p>
+
+      <div  class="options-select">
+        <h3 class="pa-1">Telafuz Edilecek </h3>
+        <select style="width: 50%;" class="blue white--text pa-2 rounded" v-model="selectValue">
+          <option style="width:50% " class="caption">{{getData.kelime}}</option>
+          <option style="width:50% " class="caption" v-for="item in getData.meaning">{{item}} </option>
+        </select>
+      </div>
 
       <spaeech />
-      <p class="success"> ana dizi{{$store.state.txtSpeakResulat}}</p>
-      <p class="red">{{datas}}</p>
-      <div>
 
+    <div v-if="$store.state.txtSpeakResulat !=null">
+
+      <p v-if="datas" class="success pa-4 text-center white--text">Doğru Telafuz</p>
+
+      <div v-else class="red pa-2 white--text">
+        <h3>{{$store.state.txtSpeakResulat}},</h3>
+        <p>Dedin Yanlış Telafuz Ettin!</p>
+        <p>{{selectValue}} ,Söylemeye Çalışın</p>
       </div>
+
+    </div>
+
+
+    </v-card>
+
+    <v-card  @click="help" class="hidden-md-and-up mt-6">
+      <v-card-title>Ses ile ilgili problemi yaşıyorusun?</v-card-title>
     </v-card>
 
   </div>
@@ -62,6 +82,8 @@ export default {
       routeWord:null,
       textShowSucces:null,
 
+      selectValue:'',
+
       spechToText:null,
       isListening:false,
       recoginiton:null
@@ -75,9 +97,8 @@ export default {
     this.$axios.get(`https://englishworld-db088-default-rtdb.europe-west1.firebasedatabase.app/categories/FSEv7HuEIoVF6XXYlUVogEYb8A03/${this.routeDay}/${this.routeWord}.json`)
       .then(res=>{
         this.getData=res.data
+        this.selectValue=this.getData.kelime
       })
-
-
 
 
   },
@@ -99,13 +120,6 @@ export default {
       this.tts.speak(toSpeak)
     },
 
-    textData(){
-
-
-    },
-
-
-
     getVoices(){
       let intervalID;
       return new Promise((resolve,reject)=>{
@@ -116,19 +130,24 @@ export default {
         }
         },10)
       })
+    },
+    help(){
+      alert('Telefonun Metin-Konumaşma Ayarlarını Düzeltiniz?')
     }
   },
 
  computed:{
 datas(){
-  if(this.getData != null){
-    if(this.$store.state.txtSpeakResulat===this.getData.kelime.toLowerCase()){
-     return  alert(true)
+  if(this.$store.state.txtSpeakResulat != null){
+
+    if(this.$store.state.txtSpeakResulat.toLowerCase()===this.selectValue.toLowerCase()){
+     return  true
     }
     else{
-      return  alert(this.getData.kelime.toLowerCase())
+      return false
     }
   }
+
 }
  }
 
@@ -136,5 +155,13 @@ datas(){
 </script>
 
 <style scoped>
-
+.options-select{
+  display: flex;
+justify-content: center;
+  align-items: center;
+  flex-flow: column;
+  background-color: rgba(232, 237, 239, 0.29);
+  width: 100%;
+  height: auto;
+}
 </style>
