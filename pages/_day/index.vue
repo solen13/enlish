@@ -10,6 +10,8 @@
       <h4 class="text-center">{{item.kelime}}</h4>
     </v-card>
   </div>
+
+
 </div>
 </template>
 
@@ -41,6 +43,7 @@ export default {
      this.$router.push('/'+this.route+'/'+item)
 
     },
+
 
   },
 }

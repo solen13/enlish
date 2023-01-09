@@ -20,6 +20,9 @@ export  default {
 
   uid(state,payload){
     state.uid=payload
+  },
+  speak(state,payload) {
+    state.txtSpeakResulat=payload
   }
 
 }

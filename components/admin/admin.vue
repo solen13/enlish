@@ -79,6 +79,7 @@
          </v-col>
        </v-row>
      </v-card>
+
   </template>
 
      <v-btn @click="update" v-if="isSendBtn" class="mt-3"> Güncelle</v-btn>
@@ -103,6 +104,8 @@ export default {
       isSendBtn:false,
       categoriesUpdate:null,
       updateId:null,
+
+      updateAnlam:[],
       world:{
          kelime:null,
          exampleSentences:[],
@@ -141,10 +144,11 @@ export default {
             this.world.exampleSentences=[]
             this.world.meaning=[]
             this.anlamnewTag=null,
-              this.cumlenewTag=null
-
+              this.cumlenewTag=null,
+              this.isUpdate=true
           })
       }
+
     },
 
     addTag() {
@@ -181,16 +185,23 @@ export default {
       console.log(item)
     },
     updateBtnWoeld(item,index){
-      console.log('kelime',item)
+
       this.categories=this.categoriesUpdate
       this.world.kelime=item.kelime
-      this.cumlenewTag=item.meaning
-        this.anlamnewTag=item.exampleSentences
+      this.anlamnewTag=item.exampleSentences
 
       this.isUpdate=false
+      this.isSendBtn=true
       this.updateId=index
-      console.log('id',index)
-     this.isSendBtn=true
+
+      item.meaning.forEach(el=>{
+        this.world.meaning.push(el)
+      })
+
+      item.exampleSentences.forEach(el=>{
+        this.world.exampleSentences.push(el)
+      })
+
 
     },
 

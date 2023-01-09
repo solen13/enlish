@@ -1,5 +1,6 @@
 export  default ()=>({
  imageFullShow:false,
   key:null,
-  uid:null
+  uid:null,
+  txtSpeakResulat:null
 })

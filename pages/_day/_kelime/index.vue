@@ -31,14 +31,26 @@
 
     </v-card>
 
+    <v-card>
+      <p>Kendini test et</p>
 
+      <spaeech />
+      <p class="success"> ana dizi{{$store.state.txtSpeakResulat}}</p>
+      <p class="red">{{datas}}</p>
+      <div>
+
+      </div>
+    </v-card>
 
   </div>
 </template>
 
 <script>
+import spaeech from "@/components/spaeech/spaeech";
 export default {
   name: "index",
+  components:{spaeech},
+
   data(){
     return{
       tts:window.speechSynthesis,
@@ -47,17 +59,27 @@ export default {
 
       getData:null,
       routeDay:null,
-      routeWord:null
+      routeWord:null,
+      textShowSucces:null,
+
+      spechToText:null,
+      isListening:false,
+      recoginiton:null
+
     }
   },
   mounted() {
-    console.log(this.tts.getVoices())
+
     this.routeDay=this.$route.params.day
     this.routeWord=this.$route.params.kelime
     this.$axios.get(`https://englishworld-db088-default-rtdb.europe-west1.firebasedatabase.app/categories/FSEv7HuEIoVF6XXYlUVogEYb8A03/${this.routeDay}/${this.routeWord}.json`)
       .then(res=>{
         this.getData=res.data
       })
+
+
+
+
   },
   created() {
     this.getVoices().then(voices =>{
@@ -67,14 +89,23 @@ export default {
       console.log(this.selectedVoice)
       console.log(this.voiceList)
     })
+
   },
   methods:{
     sound(item){
-    let toSpeak= new SpeechSynthesisUtterance(item)
+      let toSpeak= new SpeechSynthesisUtterance(item)
       toSpeak.voice=this.voiceList.find(v => v.name==="Google US English") || null
       toSpeak.rate=0.7
       this.tts.speak(toSpeak)
     },
+
+    textData(){
+
+
+    },
+
+
+
     getVoices(){
       let intervalID;
       return new Promise((resolve,reject)=>{
@@ -88,6 +119,18 @@ export default {
     }
   },
 
+ computed:{
+datas(){
+  if(this.getData != null){
+    if(this.$store.state.txtSpeakResulat===this.getData.kelime.toLowerCase()){
+     return  alert(true)
+    }
+    else{
+      return  alert(this.getData.kelime.toLowerCase())
+    }
+  }
+}
+ }
 
 }
 </script>
