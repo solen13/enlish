@@ -1,28 +1,28 @@
 <template>
   <div class="pa-3" v-if="getData">
 
-  <div class="pa-2">
-    <h4 class="pa-2 text-center">Kelime</h4>
+  <v-card class="">
+    <h4 class="pa-2 text-center light-blue white--text">Kelime</h4>
 
-    <div class="d-flex">
-      <h2>{{getData.kelime}}</h2>
+    <div class="d-flex pa-2">
+      <h2 class="text-uppercase">{{getData.kelime}}</h2>
       <v-btn class="ml-2" icon @click="sound(getData.kelime)">
         <v-icon color="blue">mdi-volume-high</v-icon>
       </v-btn>
     </div>
 
-  </div>
+  </v-card>
 
-    <v-card>
-      <h4 class="text-center pa-2">Anlamı</h4>
-      <div class="d-flex mt-1" v-for="(item,index) in getData.exampleSentences">
+    <v-card class="mt-2">
+      <h4 class="text-center pa-2 light-blue white--text">Anlamı</h4>
+      <div class="d-flex mt-1 pa-2" v-for="(item,index) in getData.exampleSentences">
         <h3>{{index+1}}) {{item}}</h3>
       </div>
     </v-card>
 
-    <v-card>
-      <h4 class="pa-2 text-center">Örnek Cümle</h4>
-      <div class="d-flex" v-for="(item,index) in getData.meaning">
+    <v-card class="mt-2">
+      <h4 class="pa-2 text-center light-blue white--text">Örnek Cümle</h4>
+      <div class="d-flex pa-2" v-for="(item,index) in getData.meaning">
         <h4>{{index+1}}) {{item}}</h4>
         <v-btn @click="sound(item)" class="ml-2" icon>
           <v-icon color="blue">mdi-volume-high</v-icon>
@@ -31,14 +31,15 @@
 
     </v-card>
 
-    <v-card>
+    <v-card class="mt-2" >
+      <h3 class="pa-1 light-blue white--text text-center ">Telafuz Edilecek </h3>
+      <div  class="options-select mt-2"  >
 
-      <div  class="options-select">
-        <h3 class="pa-1">Telafuz Edilecek </h3>
-        <select style="width: 50%;" class="blue white--text pa-2 rounded" v-model="selectValue">
+        <select style="width: 50%; " class="blue white--text pa-2 rounded" v-model="selectValue">
           <option style="width:50% " class="caption">{{getData.kelime}}</option>
           <option style="width:50% " class="caption" v-for="item in getData.meaning">{{item}} </option>
         </select>
+
       </div>
 
       <spaeech />

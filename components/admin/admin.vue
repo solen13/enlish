@@ -5,18 +5,22 @@
     <v-btn @click="updatePage">Günceleme yap </v-btn>
     <v-btn @click="addPage">Yeni kelime Ekle</v-btn>
   </div>
-  <div v-else>
+    <div v-else>
     <v-card v-if="isUpdate">
 
-      <div v-for="(item,index) in categoriesAll">
-        <v-btn @click="updateDay(item,index)">{{index}}</v-btn>
+     <v-card active-class="active" class="d-flex justify-center pa-4">
+       <div class="ml-2"  v-for="(item,index) in categoriesAll">
+         <v-btn @click="updateDay(item,index)">{{index}}</v-btn>
+       </div>
+     </v-card>
 
-      </div>
-      <div>
-        <div v-for="(item,index) in accadion">
-          <v-btn @click="updateBtnWoeld(item,index)">{{item.kelime}}</v-btn>
+      <v-card color="d-flex justify-center">
+        <div style="width: 50%">
+          <div v-for="(item,index) in accadion">
+            <v-btn @click="updateBtnWoeld(item,index)">{{item.kelime}}</v-btn>
+          </div>
         </div>
-      </div>
+      </v-card>
     </v-card>
     <v-card v-else class="card" >
       <div >
@@ -282,6 +286,9 @@ export default {
   .card-content{
     width: 100%;
   }
+}
+.active{
+  background-color: blue;
 }
 
 </style>
