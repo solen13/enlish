@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <main style="background-color: #b2ebf2; height: 100%">
     <div class="py-2">
       <h2 class="text-center">{{ route }}</h2>
       <p class="text-center">Öğrenmek İstediğin Kelimeyi Seç</p>
@@ -7,24 +7,26 @@
 
     <div class="container">
       <v-card
-        class=""
-        @click="word(index)"
-        width="200"
+        class="pa-4 text-center blue text-no-wrap rounded-b-xl white--text"
+        width="210"
         height="160"
         v-for="(item, index) in getData"
       >
-        <h4 class="text-center">{{ item.kelime }}</h4>
+        <h4 class="text-center font-weight-bold title">{{ item.kelime }}</h4>
+        <hr />
+        <div class="d-flex flex-wrap mt-2">
+          Anlam:
+          <span class="" v-for="i in item.exampleSentences">
+            <b> {{ i }} , </b>
+          </span>
+        </div>
 
-        Anlam:
-        <template v-for="i in item.exampleSentences">
-          <b> {{ i }} , </b>
-        </template>
-        <div class="d-flex justify-center align-end">
-          <v-btn>detay</v-btn>
+        <div class="d-flex justify-center mt-2">
+          <v-btn @click="word(index)" color="white" outlined>detay</v-btn>
         </div>
       </v-card>
     </div>
-  </div>
+  </main>
 </template>
 
 <script>
@@ -64,7 +66,7 @@ export default {
 <style scoped>
 .container {
   width: 100%;
-  height: 100%;
+
   justify-content: center;
   align-content: flex-start;
   display: flex;
@@ -72,5 +74,7 @@ export default {
   flex-wrap: wrap;
   gap: 5px;
   margin-top: 10px;
+}
+@media only screen and (min-width: 600px) {
 }
 </style>
