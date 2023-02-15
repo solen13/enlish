@@ -6,7 +6,7 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </div>
-      csc</v-card
+      yardım</v-card
     >
   </div>
 </template>
