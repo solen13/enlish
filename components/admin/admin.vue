@@ -43,6 +43,12 @@
       <div class="input-content rounded">
         <input class="input-text" type="text" placeholder="kelime" v-model="world.kelime">
       </div>
+
+      <div class="input-content rounded">
+        <input class="input-text" type="text" placeholder="kategorisi" v-model="world.categories">
+      </div>
+
+
       <template>
 
         <div class="input-content rounded">
@@ -112,6 +118,7 @@ export default {
       categories:null,
 
       isContentShow:true,
+        
 
       accadion:null,
       anlamnewTag:null,
@@ -123,6 +130,7 @@ export default {
 
       updateAnlam:[],
       world:{
+        categories:null,
          kelime:null,
          exampleSentences:[],
          meaning:[],
