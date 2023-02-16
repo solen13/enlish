@@ -122,9 +122,16 @@ export default {
       console.log(this.selectedVoice);
       console.log(this.voiceList);
     });
+
+    let user = localStorage.getItem("soundFirst");
+    if (user === null) {
+      this.$store.dispatch("helpshows", true);
+    }
   },
   methods: {
     sound(item) {
+      localStorage.setItem("soundFirst", true);
+
       let toSpeak = new SpeechSynthesisUtterance(item);
       toSpeak.voice =
         this.voiceList.find((v) => v.name === "Google US English") || null;
@@ -143,9 +150,7 @@ export default {
         }, 10);
       });
     },
-    help() {
-      alert("Telefonun Metin-Konumaşma Ayarlarını Düzeltiniz?");
-    },
+    help() {},
   },
 
   computed: {
